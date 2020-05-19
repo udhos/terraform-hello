@@ -23,15 +23,20 @@ resource "aws_instance" "ncc1701" {
 	ami           = "ami-0f7919c33c90f5b58"
 	instance_type = "t2.small"
 	subnet_id     = aws_subnet.subnet_public_2a.id
-	iam_instance_profile = aws_iam_role.ncc1701role.name
+	iam_instance_profile = aws_iam_instance_profile.instance_profile_ncc1701.name
 	tags = {
 		Name = "ncc1701"
 	}
 }
 
+resource "aws_iam_instance_profile" "instance_profile_ncc1701" {
+	name = "instance_profile_ncc1701"
+	role = aws_iam_role.ncc1701role.name
+}
+
 resource "aws_iam_role_policy_attachment" "role_attach" {
 	role       = aws_iam_role.ncc1701role.name
-	policy_arn = "arn:aws:iam::aws:policy:AmazonSSMManagedInstanceCore"
+	policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role" "ncc1701role" {
