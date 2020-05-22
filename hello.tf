@@ -60,12 +60,22 @@ resource "aws_instance" "ncc1701" {
 	tags = {
 		Name = "ncc1701"
 	}
-	user_data = file("user_data.sh")
+	#user_data = file("user_data.sh")
+	#user_data = data.template_file.user_data_template
+	user_data = templatefile("user_data.sh.tf_template", { tf_banner = "banner_defined_from_terraform_template" })
 	security_groups = [ aws_security_group.ncc1701.id ]
 	provisioner "local-exec" {
 		command = "echo writing instance public ip to file: instance_ip_public.txt; echo ${aws_instance.ncc1701.public_ip} > instance_ip_public.txt"
 	}
 }
+
+# template_file replaced by templatefile function
+#data "template_file" "user_data_template" {
+#	template = file("user_data.sh.tf_template")
+#	vars = {
+#		tf_banner = "banner_defined_from_terraform_template"
+#	}
+#}
 
 resource "aws_security_group" "ncc1701" {
 	name        = "ncc1701"
