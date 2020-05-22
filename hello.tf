@@ -15,12 +15,26 @@ variable "mylist" {
 	default = [1,2,3]
 }
 
+variable "AWS_REGION" {
+	type = string
+	default = "us-east-2"
+}
+
+variable "image" {
+	type = map
+	default = {
+		"us-east-2" = "ami-0f7919c33c90f5b58"
+	}
+}
+
 provider "aws" {
-	region = "us-east-2"
+	#region = "us-east-2"
+	region = var.AWS_REGION
 }
 
 resource "aws_instance" "ncc1701" {
-	ami           = "ami-0f7919c33c90f5b58"
+	#ami           = "ami-0f7919c33c90f5b58"
+	ami           = lookup(var.image, var.AWS_REGION)
 	instance_type = "t2.small"
 	subnet_id     = aws_subnet.subnet_public_2a.id
 	iam_instance_profile = aws_iam_instance_profile.instance_profile_ncc1701.name
