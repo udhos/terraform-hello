@@ -28,14 +28,12 @@ variable "image" {
 }
 
 provider "aws" {
-	#region = "us-east-2"
 	region = var.AWS_REGION
 }
 
 resource "aws_instance" "ncc1701" {
-	#ami           = "ami-0f7919c33c90f5b58"
 	ami           = lookup(var.image, var.AWS_REGION)
-	instance_type = "t2.small"
+	instance_type = "t3.small"
 	subnet_id     = aws_subnet.subnet_public_2a.id
 	iam_instance_profile = aws_iam_instance_profile.instance_profile_ncc1701.name
 	tags = {
