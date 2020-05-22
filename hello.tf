@@ -39,6 +39,32 @@ resource "aws_instance" "ncc1701" {
 	tags = {
 		Name = "ncc1701"
 	}
+	user_data = file("user_data.sh")
+	security_groups = [ aws_security_group.ncc1701.id ]
+}
+
+resource "aws_security_group" "ncc1701" {
+	name        = "ncc1701"
+	description = "Allow 8080 inbound traffic"
+	vpc_id      = aws_vpc.vpc_test.id
+
+	ingress {
+		from_port   = 8080
+		to_port     = 8080
+		protocol    = "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	egress {
+		from_port   = 0
+		to_port     = 0
+		protocol    = "-1"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	tags = {
+		Name = "ncc1701"
+	}
 }
 
 resource "aws_iam_instance_profile" "instance_profile_ncc1701" {
