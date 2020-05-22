@@ -1,3 +1,24 @@
+# terraform {
+#	backend "s3" {
+# 		bucket = var.BUCKET_STATE
+# 		key = "terraform-state/teste.tfstate"
+# 		region = "us-east-1"
+# 		encrypt = true
+# 	}
+#}
+
+# backend does not support variables: var.BUCKET_STATE
+# https://github.com/hashicorp/terraform/issues/13022
+
+terraform {
+	backend "s3" {
+		# bucket is taken from command line: terraform init -backend-config
+		key     = "terraform-state/teste.tfstate"
+		region  = "us-east-1"
+		encrypt = true
+	}
+}
+
 variable "myvar" {
 	type = string
 	default = "hello terraform"
