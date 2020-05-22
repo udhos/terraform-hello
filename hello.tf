@@ -41,6 +41,9 @@ resource "aws_instance" "ncc1701" {
 	}
 	user_data = file("user_data.sh")
 	security_groups = [ aws_security_group.ncc1701.id ]
+	provisioner "local-exec" {
+		command = "echo writing instance public ip to file: instance_ip_public.txt; echo ${aws_instance.ncc1701.public_ip} > instance_ip_public.txt"
+	}
 }
 
 resource "aws_security_group" "ncc1701" {
@@ -138,3 +141,6 @@ resource "aws_route_table_association" "rt_association_public" {
 	route_table_id = aws_route_table.rt_public.id
 }
 
+output "instance_ip_public" {
+	value = aws_instance.ncc1701.public_ip
+}
